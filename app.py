@@ -398,11 +398,11 @@ def run_bot():
 
 
     
-schedule.every(5).seconds.do(run_bot)
+schedule.every(10).seconds.do(run_bot)
 
 while True:
     schedule.run_pending()
-    time.sleep(1)
+    time.sleep(10)
     
 if __name__ == '__main__':
     app.run(debug=True)
