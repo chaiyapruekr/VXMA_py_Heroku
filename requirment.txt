@@ -1,8 +1,0 @@
-numpy
-pandas
-pandas-ta
-ccxt
-line_notify
-flask
-schedule
-tabulate
