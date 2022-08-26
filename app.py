@@ -309,8 +309,8 @@ def CloseShort(df,balance,symbol,status):
     total = balance['total']['USDT']
     msg ="BINANCE:\n" + "BOT         : " + BOT_NAME + "\nCoin        : " + symbol + "\nStatus      : " + "CloseShort[BUY]" + "\nAmount    : " + str(amount) +"("+str(round((qty_close*ask),2))+" USDT)" + "\nPrice        :" + str(ask) + " USDT" + "\nRealized P/L: " + str(round(upnl,2)) + " USDT"  +"\nBalance   :" + str(round(total,2)) + " USDT"
     notify.send(msg)
-
     return
+
 #clearconsol
 def clearconsol():
     time.sleep(10)
@@ -392,9 +392,9 @@ def run_bot():
         andean(df)
         pivot(df)
         vxma(df) 
-        check_buy_sell_signals(df,symboli,position_bilgi,balance,leveragei)
         print('checking current position on hold...')
         print(tabulate(position_bilgi, headers = 'keys', tablefmt = 'grid'))
+        check_buy_sell_signals(df,symboli,position_bilgi,balance,leveragei)
 
 
     
@@ -402,7 +402,7 @@ schedule.every(10).seconds.do(run_bot)
 
 while True:
     schedule.run_pending()
-    time.sleep(10)
+    time.sleep(20)
     
 if __name__ == '__main__':
     app.run(debug=True)
