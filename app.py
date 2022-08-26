@@ -218,10 +218,10 @@ def RRTP(df,symbol,direction):
     #sellprice * (1 - (((highest - openprice)/ openprice))*rrPer)
     # true = long, false = short
     if direction :
-        ask = exchange.fetchBidsAsks([symboli])[symboli]['info']['askPrice']
+        ask = exchange.fetchBidsAsks([symbol])[symbol]['info']['askPrice']
         target = ask *(1+((ask-df['lowest'][len(df.index)-1])/ask)*TPRR1)
     else :
-        bid = exchange.fetchBidsAsks([symboli])[symboli]['info']['bidPrice']
+        bid = exchange.fetchBidsAsks([symbol])[symbol]['info']['bidPrice']
         target = bid *(1-((df['highest'][len(df.index)-1]-bid)/bid)*TPRR1)
     return target
 
