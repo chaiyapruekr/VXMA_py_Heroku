@@ -14,6 +14,8 @@ import os
 import math 
 from tabulate import tabulate
 
+app = Flask(__name__)
+
 #key setting str(os.environ['API_KEY'])
 API_KEY = str(os.environ['API_KEY'])
 API_SECRET = str(os.environ['API_SECRET']) 
@@ -71,6 +73,10 @@ if MIN_BALANCE[0]=='$':
 
 wellcome = 'VXMA Bot Started :\n' + messmode + '\nTrading pair : ' + str(SYMBOL_NAME) + '\nTimeframe : ' + str(TF) + '\nBasic Setting\n----------\nRisk : ' + str(RISK) + '\nRisk:Reward : ' + str(TPRR1) + '\nATR Period : ' + str(ATR_Period) + '\nATR Multiply : ' + str(ATR_Mutiply) + '\nRSI  : ' + str(RSI_Period) + '\nEMA  : '+ str(EMA_FAST) + '\nLinear : ' + str(LINEAR) + '\nSmooth : ' + str(SMOOTH) + '\nAndean_Oscillator : ' + str(LengthAO) + '\nBot Will Stop Entry when balance < ' + str(min_balance) + '\nGOODLUCK'
 notify.send(wellcome)
+
+@app.route("/")
+def hello_world():
+    return BOT_NAME + 'By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
 
 #Alphatrend
 def alphatrend(df, period=int(ATR_Period), atr_multiplier=float(ATR_Mutiply)):
@@ -391,11 +397,7 @@ def run_bot():
         print('checking current position on hold...')
         print(tabulate(position_bilgi, headers = 'keys', tablefmt = 'grid'))
 
-app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return BOT_NAME + 'By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
     
 schedule.every(5).seconds.do(run_bot)
 
