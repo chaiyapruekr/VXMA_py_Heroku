@@ -32,7 +32,6 @@ SYMBOL_NAME = str(os.environ['SYMBOL_NAME']).split(",")
 LEVERAGE = str(os.environ['LEVERAGE']).split(",") 
 TF = str(os.environ['TF']) 
 #STAT setting
-ORDER_ENABLE = str(os.environ['ORDER_ENABLE']) 
 RISK = str(os.environ['LOST_PER_TARDE']) 
 TPRR1 = str(os.environ['RiskReward']) 
 TPPer = str(os.environ['TP_Percent']) 
