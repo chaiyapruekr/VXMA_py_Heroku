@@ -74,8 +74,8 @@ if MIN_BALANCE[0]=='$':
     min_balance=float(MIN_BALANCE[1:len(MIN_BALANCE)])
     print("MIN_BALANCE=",min_balance)
 
-wellcome = 'VXMA Bot Started :\n' + messmode + '\nTrading pair : ' + str(SYMBOL_NAME) + '\nTimeframe : ' + str(TF) + '\nBasic Setting\n----------\nRisk : ' + str(RISK) + '\nRisk:Reward : ' + str(TPRR1) + '\nATR Period : ' + str(ATR_Period) + '\nATR Multiply : ' + str(ATR_Mutiply) + '\nRSI  : ' + str(RSI_Period) + '\nEMA  : '+ str(EMA_FAST) + '\nLinear : ' + str(LINEAR) + '\nSmooth : ' + str(SMOOTH) + '\nAndean_Oscillator : ' + str(LengthAO) + '\nBot Will Stop Entry when balance < ' + str(min_balance) + '\nGOODLUCK'
-notify.send(wellcome)
+#wellcome = 'VXMA Bot Started :\n' + messmode + '\nTrading pair : ' + str(SYMBOL_NAME) + '\nTimeframe : ' + str(TF) + '\nBasic Setting\n----------\nRisk : ' + str(RISK) + '\nRisk:Reward : ' + str(TPRR1) + '\nATR Period : ' + str(ATR_Period) + '\nATR Multiply : ' + str(ATR_Mutiply) + '\nRSI  : ' + str(RSI_Period) + '\nEMA  : '+ str(EMA_FAST) + '\nLinear : ' + str(LINEAR) + '\nSmooth : ' + str(SMOOTH) + '\nAndean_Oscillator : ' + str(LengthAO) + '\nBot Will Stop Entry when balance < ' + str(min_balance) + '\nGOODLUCK'
+#notify.send(wellcome)
 
 #Alphatrend
 def alphatrend(df, period=int(ATR_Period), atr_multiplier=float(ATR_Mutiply)):
