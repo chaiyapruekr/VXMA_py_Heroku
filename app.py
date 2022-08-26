@@ -7,6 +7,7 @@ import pandas_ta as ta
 import numpy as np
 from line_notify import LineNotify 
 from datetime import datetime as dt
+import schedule
 import warnings
 warnings.filterwarnings('ignore')
 import os
@@ -398,10 +399,11 @@ def run_bot():
 
 
     
+schedule.every(5).seconds.do(run_bot)
 
 while True:
-    run_bot()
-    time.sleep(10)
+    schedule.run_pending()
+    time.sleep(1)
     
 if __name__ == '__main__':
     app.run(debug=True)
