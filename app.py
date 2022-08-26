@@ -7,7 +7,6 @@ import pandas_ta as ta
 import numpy as np
 from line_notify import LineNotify 
 from datetime import datetime as dt
-import schedule
 import warnings
 warnings.filterwarnings('ignore')
 import os
@@ -15,6 +14,10 @@ import math
 from tabulate import tabulate
 
 app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    return BOT_NAME + 'By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
 
 #key setting str(os.environ['API_KEY'])
 API_KEY = str(os.environ['API_KEY'])
@@ -73,10 +76,6 @@ if MIN_BALANCE[0]=='$':
 
 wellcome = 'VXMA Bot Started :\n' + messmode + '\nTrading pair : ' + str(SYMBOL_NAME) + '\nTimeframe : ' + str(TF) + '\nBasic Setting\n----------\nRisk : ' + str(RISK) + '\nRisk:Reward : ' + str(TPRR1) + '\nATR Period : ' + str(ATR_Period) + '\nATR Multiply : ' + str(ATR_Mutiply) + '\nRSI  : ' + str(RSI_Period) + '\nEMA  : '+ str(EMA_FAST) + '\nLinear : ' + str(LINEAR) + '\nSmooth : ' + str(SMOOTH) + '\nAndean_Oscillator : ' + str(LengthAO) + '\nBot Will Stop Entry when balance < ' + str(min_balance) + '\nGOODLUCK'
 notify.send(wellcome)
-
-@app.route("/")
-def hello_world():
-    return BOT_NAME + 'By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
 
 #Alphatrend
 def alphatrend(df, period=int(ATR_Period), atr_multiplier=float(ATR_Mutiply)):
@@ -399,11 +398,10 @@ def run_bot():
 
 
     
-schedule.every(5).seconds.do(run_bot)
 
 while True:
-    schedule.run_pending()
-    time.sleep(1)
+    run_bot()
+    time.sleep(10)
     
 if __name__ == '__main__':
     app.run(debug=True)
