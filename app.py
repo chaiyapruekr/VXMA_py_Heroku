@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return BOT_NAME + 'By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
+    return 'VXMA bot (Form Tradingview)By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
 
 #key setting str(os.environ['API_KEY'])
 API_KEY = str(os.environ['API_KEY'])
