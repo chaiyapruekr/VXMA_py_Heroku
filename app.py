@@ -285,7 +285,7 @@ def CloseLong(df,balance,symbol,status):
     print('Close Long')
     amount = float(status["positionAmt"][len(status.index) -1])
     upnl = status["unrealizedProfit"][len(status.index) -1]
-    bid = exchange.fetchBidsAsks([symboli])[symboli]['info']['bidPrice']
+    bid = exchange.fetchBidsAsks([symbol])[symbol]['info']['bidPrice']
     params = {
     'positionSide': Lside
     }
@@ -300,7 +300,7 @@ def CloseShort(df,balance,symbol,status):
     print('Close Short')
     amount = abs(float(status["positionAmt"][len(status.index) -1]))
     upnl = status["unrealizedProfit"][len(status.index) -1]
-    ask = exchange.fetchBidsAsks([symboli])[symboli]['info']['askPrice']
+    ask = exchange.fetchBidsAsks([symbol])[symbol]['info']['askPrice']
     params = {
     'positionSide': Sside
     }
