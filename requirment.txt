@@ -6,3 +6,4 @@ line_notify
 flask
 schedule
 tabulate
+gunicorn
