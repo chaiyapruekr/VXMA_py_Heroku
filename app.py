@@ -37,13 +37,13 @@ TPRR1 = str(os.environ['RiskReward'])
 TPPer = str(os.environ['TP_Percent']) 
 Pivot = str(os.environ['Pivot_lookback']) 
 #TA setting
-ATR_Period = str(os.environ['ATR_Period']) 
-ATR_Mutiply = str(os.environ['ATR_Mutiply']) 
-RSI_Period = str(os.environ['RSI_Period']) 
-EMA_FAST = str(os.environ['EMA_Fast']) 
-LINEAR = str(os.environ['SUBHAG_LINEAR']) 
-SMOOTH = str(os.environ['SMOOTH']) 
-LengthAO = str(os.environ['Andean_Oscillator'])
+ATR_Period = str(os.environ['ATR_Period']).split(",")
+ATR_Mutiply = str(os.environ['ATR_Mutiply']).split(",")
+RSI_Period = str(os.environ['RSI_Period']).split(",")
+EMA_FAST = str(os.environ['EMA_Fast']).split(",")
+LINEAR = str(os.environ['SUBHAG_LINEAR']).split(",")
+SMOOTH = str(os.environ['SMOOTH']).split(",")
+LengthAO = str(os.environ['Andean_Oscillator']).split(",")
 
 # API CONNECT
 exchange = ccxt.binance({
@@ -336,7 +336,7 @@ def check_buy_sell_signals(df,symbol,status,balance,lev):
     longPozisyonda = False
     shortPozisyonda = False
     pozisyondami = False
-    print(f"Fetching new bars for {dt.now().isoformat()}")
+    print(f"Fetching new bars for {symbol , dt.now().isoformat()}")
     print(df.tail(5))
     last = len(df.index) -1
     previous = last - 1
