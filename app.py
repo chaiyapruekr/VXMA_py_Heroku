@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return BOT_NAME + 'By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
+    return 'VXMA bot (Form Tradingview)By Vaz. \nDonate XMR : 87tT3DZqi4mhGuJjEp3Yebi1Wa13Ne6J7RGi9QxU21FkcGGNtFHkfdyLjaPLRv8T2CMrz264iPYQ2dCsJs2MGJ27GnoJFbm'
 
 #key setting str(os.environ['API_KEY'])
 API_KEY = str(os.environ['API_KEY'])
@@ -73,9 +73,6 @@ else:
 if MIN_BALANCE[0]=='$':
     min_balance=float(MIN_BALANCE[1:len(MIN_BALANCE)])
     print("MIN_BALANCE=",min_balance)
-
-#wellcome = 'VXMA Bot Started :\n' + messmode + '\nTrading pair : ' + str(SYMBOL_NAME) + '\nTimeframe : ' + str(TF) + '\nBasic Setting\n----------\nRisk : ' + str(RISK) + '\nRisk:Reward : ' + str(TPRR1) + '\nATR Period : ' + str(ATR_Period) + '\nATR Multiply : ' + str(ATR_Mutiply) + '\nRSI  : ' + str(RSI_Period) + '\nEMA  : '+ str(EMA_FAST) + '\nLinear : ' + str(LINEAR) + '\nSmooth : ' + str(SMOOTH) + '\nAndean_Oscillator : ' + str(LengthAO) + '\nBot Will Stop Entry when balance < ' + str(min_balance) + '\nGOODLUCK'
-#notify.send(wellcome)
 
 #Alphatrend
 def alphatrend(df,atr_p,atr_m,rsi):
@@ -226,10 +223,10 @@ def RRTP(df,symbol,direction):
     #sellprice * (1 - (((Highest - Openprice)/ Openprice))*rrPer)
     # true = long, false = short
     if direction :
-        ask = exchange.fetchBidsAsks([symboli])[symboli]['info']['askPrice']
+        ask = exchange.fetchBidsAsks([symbol])[symbol]['info']['askPrice']
         target = ask *(1+((ask-df['Lowest'][len(df.index)-1])/ask)*TPRR1)
     else :
-        bid = exchange.fetchBidsAsks([symboli])[symboli]['info']['bidPrice']
+        bid = exchange.fetchBidsAsks([symbol])[symbol]['info']['bidPrice']
         target = bid *(1-((df['Highest'][len(df.index)-1]-bid)/bid)*TPRR1)
     return target
 
@@ -296,7 +293,7 @@ def CloseLong(df,balance,symbol,status):
     print('Close Long')
     amount = float(status["positionAmt"][len(status.index) -1])
     upnl = status["unrealizedProfit"][len(status.index) -1]
-    bid = exchange.fetchBidsAsks([symboli])[symboli]['info']['bidPrice']
+    bid = exchange.fetchBidsAsks([symbol])[symbol]['info']['bidPrice']
     params = {
     'positionSide': Lside
     }
@@ -312,7 +309,7 @@ def CloseShort(df,balance,symbol,status):
     print('Close Short')
     amount = abs(float(status["positionAmt"][len(status.index) -1]))
     upnl = status["unrealizedProfit"][len(status.index) -1]
-    ask = exchange.fetchBidsAsks([symboli])[symboli]['info']['askPrice']
+    ask = exchange.fetchBidsAsks([symbol])[symbol]['info']['askPrice']
     params = {
     'positionSide': Sside
     }
@@ -377,7 +374,19 @@ def check_buy_sell_signals(df,symbol,status,balance,lev):
             shortPozisyonda = True
         else:
             print("already in position, nothing to do")
-    
+
+def indicator(df,ema_period,linear,smooth,atr_p,atr_m,rsi,AOL):
+    df['ema'] = ta.ema(df['Close'],ema_period)
+    df['subhag'] = ta.ema(ta.linreg(df['Close'],linear,0),smooth)
+    alphatrend(df,atr_p,atr_m,rsi)
+    andean(df,AOL)
+    pivot(df)
+    vxma(df)
+    df.drop(columns=['ema','subhag','atr','up2'], axis=1,inplace=True)
+    df.drop(columns=['downT','upT','alphatrend','dn1'], axis=1,inplace=True)
+    df.drop(columns=['cmpbull','cmpbear','up1','dn2'], axis=1,inplace=True)
+    return df
+
 #Run everthing here then sent data to checking 
 def run_bot():
     balance = exchange.fetch_balance()
@@ -389,6 +398,13 @@ def run_bot():
         newSymboli = SYMBOL_NAME[i] + "USDT"
         symboli = SYMBOL_NAME[i] + "/USDT"
         leveragei = LEVERAGE[i]
+        ema = int(EMA_FAST[i])
+        linear = int(LINEAR[i])
+        smooth = int(SMOOTH[i])
+        atr_p = int(ATR_Period[i])
+        atr_m = float(ATR_Mutiply[i])
+        rsi = int(RSI_Period[i])
+        AOL = int(LengthAO[i])
         current_positions = [position for position in positions if float(position['positionAmt']) != 0 and position['symbol'] == newSymboli]
         position_bilgi = pd.DataFrame(current_positions, columns=["symbol", "entryPrice","positionSide", "unrealizedProfit", "positionAmt", "initialMargin" ,"isolatedWallet"])
         exchange.load_markets()
@@ -396,12 +412,7 @@ def run_bot():
         bars = exchange.fetch_ohlcv(symboli, timeframe=TF, since = None, limit = 500)
         df = pd.DataFrame(bars[:-1], columns=['timestamp', 'Open', 'High', 'Low', 'Close', 'Volume'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
-        df['ema'] = ta.ema(df['Close'],int(EMA_FAST))
-        df['subhag'] = ta.ema(ta.linreg(df['Close'],int(LINEAR),0),int(SMOOTH))
-        alphatrend(df)
-        andean(df)
-        pivot(df)
-        vxma(df) 
+        indicator(df,ema,linear,smooth,atr_p,atr_m,rsi,AOL)
         check_buy_sell_signals(df,symboli,position_bilgi,balance,leveragei)
         print('checking current position on hold...')
         print(tabulate(position_bilgi, headers = 'keys', tablefmt = 'grid'))
