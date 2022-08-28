@@ -238,7 +238,7 @@ def OpenLong(df,balance,symbol,lev):
     if free > min_balance :
         order = exchange.createMarketOrder(symbol,'buy',amount,params={'takeProfitPrice':float(RRTP(df,symbol,True)), 'positionSide':Lside})
         orderSL = exchange.createOrder(symbol,'stop','sell',amount,float(df['Lowest'][len(df.index)-1]),params={'stopPrice':float(df['Lowest'][len(df.index)-1]),'triggerPrice':float(df['Lowest'][len(df.index)-1]),'positionSide':Lside})
-        orderTP = exchange.createOrder(symbol,'TAKE_PROFIT_MARKET','sell',amount,float(RRTP(df,symbol,True)),params={'stopPrice':float(RRTP(df,symbol,True)),'triggerPrice':float(RRTP(df,symbol,True)),'positionSide':Lside})
+        orderTP = exchange.createOrder(symbol,'TAKE_PROFIT_MARKET','sell',(amount*int(TPPer)/100),float(RRTP(df,symbol,True)),params={'stopPrice':float(RRTP(df,symbol,True)),'triggerPrice':float(RRTP(df,symbol,True)),'positionSide':Lside})
         margin=ask*amount/lev
         total = float(balance['total']['USDT'])
         msg ="BINANCE:\n" + "BOT         : " + BOT_NAME + "\nCoin        : " + symbol + "\nStatus      : " + "OpenLong[BUY]" + "\nAmount    : " + str(amount) +"("+str(round((amount*ask),2))+" USDT)" + "\nPrice        :" + str(ask) + " USDT" + str(round(margin,2))+  " USDT"+ "\nBalance   :" + str(round(total,2)) + " USDT"
@@ -256,7 +256,7 @@ def OpenShort(df,balance,symbol,lev):
     if free > min_balance :
         order = exchange.createMarketOrder(symbol,'sell',amount,params={'takeProfitPrice':float(RRTP(df,symbol,False)),'positionSide':Sside})
         orderSL = exchange.createOrder(symbol,'stop','buy',amount,float(df['Highest'][len(df.index)-1]),params={'stopPrice':float(df['Highest'][len(df.index)-1]),'triggerPrice':float(df['Highest'][len(df.index)-1]),'positionSide':Sside})
-        orderTP = exchange.createOrder(symbol,'TAKE_PROFIT_MARKET','buy',amount,float(RRTP(df,symbol,False)),params={'stopPrice':float(RRTP(df,symbol,False)),'triggerPrice':float(RRTP(df,symbol,False)),'positionSide':Sside})
+        orderTP = exchange.createOrder(symbol,'TAKE_PROFIT_MARKET','buy',(amount*int(TPPer)/100),float(RRTP(df,symbol,False)),params={'stopPrice':float(RRTP(df,symbol,False)),'triggerPrice':float(RRTP(df,symbol,False)),'positionSide':Sside})
         margin=bid*amount/lev
         total = float(balance['total']['USDT'])
         msg ="BINANCE:\n" + "BOT         : " + BOT_NAME + "\nCoin        : " + symbol + "\nStatus      : " + "OpenShort[SELL]" + "\nAmount    : " + str(amount) +"("+str(round((amount*bid),2))+" USDT)" + "\nPrice        :" + str(bid) + " USDT" + str(round(margin,2))+  " USDT"+ "\nBalance   :" + str(round(total,2)) + " USDT"
