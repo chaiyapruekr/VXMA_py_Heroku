@@ -30,7 +30,7 @@ BOT_NAME = 'VXMA'
 MIN_BALANCE = str(os.environ['MIN_BALANCE'])
 SYMBOL_NAME = str(os.environ['SYMBOL_NAME']).split(",") 
 LEVERAGE = str(os.environ['LEVERAGE']).split(",") 
-TF = str(os.environ['TF']) 
+TF = str(os.environ['TF']).split(",") 
 #STAT setting
 RISK = str(os.environ['LOST_PER_TARDE']) 
 TPRR1 = str(os.environ['RiskReward']) 
@@ -336,7 +336,6 @@ def check_buy_sell_signals(df,symbol,status,balance,lev):
     longPozisyonda = False
     shortPozisyonda = False
     pozisyondami = False
-    print(f"Fetching new bars for {symbol , dt.now().isoformat()}")
     print(df.tail(5))
     last = len(df.index) -1
     previous = last - 1
@@ -405,17 +404,19 @@ def run_bot():
         atr_m = float(ATR_Mutiply[i])
         rsi = int(RSI_Period[i])
         AOL = int(LengthAO[i])
+        tf = TF[i]
         current_positions = [position for position in positions if float(position['positionAmt']) != 0 and position['symbol'] == newSymboli]
         position_bilgi = pd.DataFrame(current_positions, columns=["symbol", "entryPrice","positionSide", "unrealizedProfit", "positionAmt", "initialMargin" ,"isolatedWallet"])
         exchange.load_markets()
         market = exchange.markets[symboli]
-        bars = exchange.fetch_ohlcv(symboli, timeframe=TF, since = None, limit = 500)
+        bars = exchange.fetch_ohlcv(symboli, timeframe=tf, since = None, limit = 500)
         df = pd.DataFrame(bars[:-1], columns=['timestamp', 'Open', 'High', 'Low', 'Close', 'Volume'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         indicator(df,ema,linear,smooth,atr_p,atr_m,rsi,AOL)
-        check_buy_sell_signals(df,symboli,position_bilgi,balance,leveragei)
         print('checking current position on hold...')
         print(tabulate(position_bilgi, headers = 'keys', tablefmt = 'grid'))
+        print(f"Fetching new bars for {symboli ,tf, dt.now().isoformat()}")
+        check_buy_sell_signals(df,symboli,position_bilgi,balance,leveragei)
 
 
     
